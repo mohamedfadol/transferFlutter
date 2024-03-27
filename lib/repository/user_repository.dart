@@ -10,9 +10,7 @@ class UserRepository{
   NetworkHandler networkHandler = NetworkHandler();
 
   Future<List<User>> fetchUsers() async {
-    // Assuming you have an API endpoint URL
     var response = await networkHandler.get('/users/get-users');
-
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
       if (jsonResponse['success']) {
@@ -28,6 +26,21 @@ class UserRepository{
   }
 
 
-
+  Future<User> fetchUser(User user) async {
+    var response = await networkHandler.get('/users/get-user/${user.userId!}');
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      if (jsonResponse['success']) {
+        dynamic usersJson = jsonResponse['data']['user'];
+        User user = usersJson;
+        logger.d(user);
+        return user;
+      } else {
+        throw Exception('Failed to load user');
+      }
+    } else {
+      throw Exception('Failed to load user');
+    }
+  }
 
 }

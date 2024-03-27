@@ -33,11 +33,12 @@ class TransactionBloc extends Bloc<TransactionEvent, TransactionState> {
     on<MakeTransactionEvent>((event, emit) async {
       emit(TransactionLoadingState());
       final result = await transactionRepository.makeTransaction(event.dataRequest);
-      if(result['success'] == true){
+      logger.d(result);
+      if(result != null && result['success'] == true){
         emit(TransactionSuccessState());
       }
-      else if(result['success'] == false){
-        emit(TransactionErrorState(result['message']));
+      else  {
+        emit(TransactionErrorState(result != null ? result['message'] : 'Unknown error'));
       }
     });
 

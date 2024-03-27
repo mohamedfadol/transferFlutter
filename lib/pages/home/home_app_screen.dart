@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:transfer_flutter/models/cart_model.dart';
 import 'package:transfer_flutter/models/transaction_model.dart';
-import 'package:transfer_flutter/pages/home/transaction/list_transaction.dart';
-import 'package:transfer_flutter/pages/home/transaction/transaction_details.dart';
-import 'package:transfer_flutter/pages/home/transaction/transaction_view.dart';
+import 'package:transfer_flutter/pages/transaction/list_transaction.dart';
+import 'package:transfer_flutter/pages/transaction/transaction_details.dart';
+import 'package:transfer_flutter/pages/transaction/transaction_view.dart';
 import 'package:transfer_flutter/pages/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 import '../../constants/constant.dart';

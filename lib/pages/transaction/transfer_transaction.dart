@@ -1,17 +1,17 @@
-import 'package:transfer_flutter/blocs/transaction_bloc.dart';
+import 'package:transfer_flutter/blocs.transactions/transaction_bloc.dart';
 import 'package:transfer_flutter/models/cart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../blocs/currency_bloc.dart';
-import '../../../blocs/user_bloc.dart';
+import '../../blocs.currencies/currency_bloc.dart';
+import '../../blocs.users/user_bloc.dart';
 import '../../../constants/constant.dart';
 import '../../../models/Currency.dart';
 import '../../../models/user_model.dart';
 import '../../../repository/currency_repository.dart';
 import '../../../repository/user_repository.dart';
-import '../../widgets/custom_text.dart';
+import '../widgets/custom_text.dart';
 class TransferTransaction extends StatefulWidget {
   final CartModel cartModel ;
   const TransferTransaction({super.key, required this.cartModel});
@@ -85,77 +85,84 @@ class _TransferTransactionState extends State<TransferTransaction> {
         child: BlocBuilder<UserBloc, UserState>(
           builder: (context, state) {
             if (state is UserLoadingState) {
-              return const Center(child: CircularProgressIndicator(color: Colors.green,));
-            } else if (state is UserLoadedState) {
-              return DropdownButtonHideUnderline(
-                child: InputDecorator(
-                  decoration:  InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                      gapPadding: 0.0,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                    // Optionally, add a label if you like
-                    // label: Text('Select Item'),
-                  ),
-                  child: DropdownButton<User>(
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is UserLoadedState) { 
 
-                    focusColor: Colors.grey,
-                    borderRadius: BorderRadius.circular(10),
-                    padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 10.0),
-                    elevation: 10,
-                    style: const TextStyle(color: Colors.black),
-                    underline: Container(),
-                    hint: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(Icons.man_rounded, size: 25.0, color: backGroundColorAppBar,),
-                        const SizedBox(width: 6.0,),
-                        CustomText(text: "Select a Customer"),
-                      ],
+              if (state is UserLoadedState) {
+                return DropdownButtonHideUnderline(
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        gapPadding: 0.0,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                      // Optionally, add a label if you like
+                      // label: Text('Select Item'),
                     ),
-                    items: state.users.map((User user) {
-                      return DropdownMenuItem<User>(
-                        enabled: true,
-                        value: user,
-                        child: Container(
-                          // width: MediaQuery.of(context).size.width * 0.8,
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20), // Add padding around text
-                            decoration: BoxDecoration(
-                              // Add decoration styles if needed
-                              color: Colors.grey[200], // Background color of dropdown items
-                              borderRadius: BorderRadius.circular(5), // Rounded corners for dropdown items
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                const Icon(Icons.man_rounded, size: 25.0, color: backGroundColorAppBar,),
-                                CustomText(text: user.name!),
-                              ],
-                            )
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (User? newValue) {
-                      setState(() {
-                        _nameDepositToController.text = newValue!.userId!.toString();
-                        print(newValue!.userId!.toString());
-                        print(_nameDepositToController.text);
-                      });
-                    },
+                    child: DropdownButton<String> (
+                      focusColor: Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
+                      padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 7.0),
+                      elevation: 10,
+                      style: const TextStyle(color: Colors.black),
+                      underline: Container(),
+                      hint: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Icon(Icons.monetization_on_outlined, size: 25.0, color: backGroundColorAppBar,),
+                          const SizedBox(width: 6.0,),
+                          CustomText(text: 'Select Customer'),
+                        ],
+                      ),
+                      value: state.selectedUser?.name,
+                      onChanged: (String? newValue) {
+                        if (newValue != null && newValue != "Select User") {
+                          final userIndex = state.users.indexWhere((user) => user.name == newValue);
+                          if (userIndex != -1) {
+                            final User selectedUser = state.users[userIndex];
+                            _nameDepositToController.text = selectedUser.userId.toString();
+                            print(_nameDepositToController.text);
+                            context.read<UserBloc>().add(DropdownItemSelectedUserEvent(selectedUser: selectedUser));
+                          } else {
+                            print("No matching user found for the name: $newValue");
+                          }
+                        }
+                      },
+                      items: state.users.map<DropdownMenuItem<String>>((User user) {
+                        return DropdownMenuItem<String>(
+                          value: user.name,
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  const Icon(Icons.man, size: 25.0, color: backGroundColorAppBar,),
+                                  CustomText(text: user.name!),
+                                ],
+                              )
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             } else if (state is UserErrorState) {
               return CustomText(text: "No Customers Found");
             }
-            return Container();// Return an empty container for initial and other states
+            return Container(); // For initial and other states
           },
         ),
       ),
     );
+
 
     final paymentAmountField = TextFormField(
       controller: _paymentAmountController,
@@ -181,6 +188,7 @@ class _TransferTransactionState extends State<TransferTransaction> {
 
     );
 
+
     final  currencies   = SizedBox(
       width: double.infinity,
       child: RepositoryProvider(
@@ -190,65 +198,73 @@ class _TransferTransactionState extends State<TransferTransaction> {
             if (state is CurrencyLoadingState) {
               return const Center(child: CircularProgressIndicator(color: Colors.green,));
             } else if (state is CurrencyLoadedState) {
-              return DropdownButtonHideUnderline(
-                child: InputDecorator(
-                  decoration:  InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey[300]!),
-                      gapPadding: 0.0,
-                      borderRadius: BorderRadius.circular(20),
+              if (state is CurrencyLoadedState) {
+                return DropdownButtonHideUnderline(
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                        gapPadding: 0.0,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                      // Optionally, add a label if you like
+                      // label: Text('Select Item'),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                    // Optionally, add a label if you like
-                    // label: Text('Select Item'),
-                  ),
-                  child: DropdownButton<Currency>(
-
-                    focusColor: Colors.grey,
-                    borderRadius: BorderRadius.circular(10),
-                    padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 7.0),
-                    elevation: 10,
-                    style: const TextStyle(color: Colors.black),
-                    underline: Container(),
-                    hint: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(Icons.monetization_on_outlined, size: 25.0, color: backGroundColorAppBar,),
-                        const SizedBox(width: 6.0,),
-                        CustomText(text: "Select a Currency"),
-                      ],
+                    child: DropdownButton<String>(
+                      focusColor: Colors.grey,
+                      borderRadius: BorderRadius.circular(10),
+                      padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 7.0),
+                      elevation: 10,
+                      style: const TextStyle(color: Colors.black),
+                      underline: Container(),
+                      hint: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Icon(Icons.monetization_on_outlined, size: 25.0, color: backGroundColorAppBar,),
+                          const SizedBox(width: 6.0,),
+                          CustomText(text: "Select a Currency"),
+                        ],
+                      ),
+                      value: state.selectedCurrency?.currencyName,
+                      onChanged: (String? newValue) {
+                        if (newValue != null && newValue != "Select Currency") {
+                          final currencyIndex = state.currencies.indexWhere((user) => user.currencyName == newValue);
+                          if (currencyIndex != -1) {
+                            final Currency selectedCurrency = state.currencies[currencyIndex];
+                            _currencyController.text = selectedCurrency.currencyId.toString();
+                            print(_currencyController.text);
+                            context.read<CurrencyBloc>().add(DropdownItemSelectedCurrencyEvent(selectedCurrency: selectedCurrency));
+                          } else {
+                            print("No matching currency found for the name: $newValue");
+                          }
+                        }
+                      },
+                      items: state.currencies.map<DropdownMenuItem<String>>((Currency currency) {
+                        return DropdownMenuItem<String>(
+                          value: currency.currencyName,
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  const Icon(Icons.monetization_on_outlined, size: 25.0, color: backGroundColorAppBar,),
+                                  CustomText(text: currency.currencyName!),
+                                ],
+                              )
+                          ),
+                        );
+                      }).toList(),
                     ),
-                    items: state.currencies.map((Currency currency) {
-                      return DropdownMenuItem<Currency>(
-                        value: currency,
-                        child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                const Icon(Icons.monetization_on_outlined, size: 25.0, color: backGroundColorAppBar,),
-                                CustomText(text: currency.currencyName!),
-                              ],
-                            )
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (Currency? newValue) {
-                      setState(() {
-                        _currencyController.text = newValue!.currencyId!.toString();
-                        print(newValue!.currencyId!.toString());
-                        print(_currencyController.text);
-                      });
-                    },
                   ),
-                ),
-              );
-            } else if (state is UserErrorState) {
+                );
+              }
+            } else if (state is CurrencyErrorState) {
               return CustomText(text: "No Currencies Found");
             }
             return Container();// Return an empty container for initial and other states
@@ -341,18 +357,19 @@ class _TransferTransactionState extends State<TransferTransaction> {
       ),
       onPressed: () async{
         dataRequest = {
-                        "_amountController": _amountController.text,
-                        "status": "status",
-                        "final_total": "status",
+                        "amount": _amountController.text,
+                        "status": "pending",
+                        "final_total": "1500",
                         "account_deposit": _nameDepositToController.text,
                         "account_withdraw": _paymentAmountController.text,
                         "currency": _currencyController.text,
-                        "status": "status",
-                        "status": "status",
+                        "method": "card",
+                        // "status": "status",
                       };
         print(dataRequest);
         transactionBloc!.add(MakeTransactionEvent(dataRequest: dataRequest));
-       // Navigator.pushNamed(context, '/home');
+        _showDynamicInfoSnackBar(context,'Have Successfully add transfer 👏', Colors.white, Icons.gpp_good, Colors.green);
+       Navigator.pushNamed(context, '/home');
         // authBloc!.add(LoginEvent(email: email.text, password: password.text));
       },
       child: Container(
@@ -413,6 +430,45 @@ class _TransferTransactionState extends State<TransferTransaction> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDynamicInfoSnackBar(BuildContext context,String text, Color? backgroundColor , IconData? icon, Color? iconColor) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            duration: const Duration(seconds: 2),
+            elevation: 1,
+            backgroundColor: backgroundColor,
+            content: Center(
+                child: Center(
+                  child: Stack(
+                    alignment: AlignmentDirectional.topCenter,
+                    clipBehavior: Clip.none,
+                    children: [
+                      Card(
+                        color: Colors.green.shade50,
+                        child:  Padding(
+                          padding: const EdgeInsets.fromLTRB(32, 56, 32, 32),
+                          child: CustomText(text: text, textStyle: const TextStyle(fontSize: 15.0, color: Colors.black,fontWeight: FontWeight.bold,)),
+                        ),
+                      ),
+                      Positioned(
+                        top: -40,
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.green.shade50, width: 4),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(icon, color: iconColor, size: 48),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+            )
+        )
     );
   }
 }

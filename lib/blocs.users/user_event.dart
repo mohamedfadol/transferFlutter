@@ -16,3 +16,11 @@ class UserLoadedEvent extends UserEvent {
   @override
   List<Object> get props => [users];
 }
+
+class DropdownItemSelectedUserEvent extends UserEvent {
+  final User selectedUser;
+  const DropdownItemSelectedUserEvent({required this.selectedUser});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [selectedUser];
+}

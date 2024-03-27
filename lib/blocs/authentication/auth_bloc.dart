@@ -3,7 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
-import '../repository/auth_repository.dart';
+import '../../repository/auth_repository.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

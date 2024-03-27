@@ -52,6 +52,7 @@ dependencies:
   permission_handler: ^11.2.1
   qr_flutter: ^4.1.0
   open_file: ^3.3.2
+  collection: ^1.15.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

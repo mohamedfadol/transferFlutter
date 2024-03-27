@@ -15,9 +15,10 @@ class CurrencyLoadingState extends CurrencyState {
 
 class CurrencyLoadedState extends CurrencyState {
   List<Currency> currencies;
-  CurrencyLoadedState({required this.currencies});
+  final Currency? selectedCurrency;
+  CurrencyLoadedState({required this.currencies, this.selectedCurrency});
   @override
-  List<Object> get props => [currencies];
+  List<Object?> get props => [currencies, selectedCurrency];
 }
 
 class CurrencyErrorState extends CurrencyState {
@@ -26,4 +27,12 @@ class CurrencyErrorState extends CurrencyState {
   @override
   // TODO: implement props
   List<Object?> get props => [message];
+}
+
+class DropdownItemSelectedCurrencyState extends CurrencyState {
+  final Currency selectedCurrency;
+  DropdownItemSelectedCurrencyState({required this.selectedCurrency});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [selectedCurrency];
 }

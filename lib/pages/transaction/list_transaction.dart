@@ -1,4 +1,4 @@
-import 'package:transfer_flutter/blocs/transaction_bloc.dart';
+import 'package:transfer_flutter/blocs.transactions/transaction_bloc.dart';
 import 'package:transfer_flutter/models/transaction_model.dart';
 import 'package:transfer_flutter/pages/widgets/custom_list_tile.dart';
 import 'package:transfer_flutter/pages/widgets/custom_text.dart';

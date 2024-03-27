@@ -16,9 +16,10 @@ class UserLoadingState extends UserState {
 
 class UserLoadedState extends UserState {
   List<User> users;
-  UserLoadedState({required this.users});
+  final User? selectedUser; // Add this line
+  UserLoadedState({required this.users, this.selectedUser});
   @override
-  List<Object> get props => [users];
+  List<Object?> get props => [users, selectedUser];
 }
 
 class UserErrorState extends UserState {
@@ -27,4 +28,12 @@ class UserErrorState extends UserState {
   @override
   // TODO: implement props
   List<Object?> get props => [message];
+}
+
+class DropdownItemSelectedUserState extends UserState {
+  final User selectedUser;
+  DropdownItemSelectedUserState({required this.selectedUser});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [selectedUser];
 }

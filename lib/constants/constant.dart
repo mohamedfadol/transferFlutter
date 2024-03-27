@@ -4,8 +4,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 // app uri
-const String apiUrl = 'http://10.21.21.22:8000/api/auth';
-const String transactionUrl = 'http://10.21.21.22:8000/api/transaction';
+const String apiUrl = 'http://192.168.40.73:8000/api/auth';
+const String apiUrlApi = 'http://192.168.40.73:8000/api';
+const String transactionUrl = '$apiUrlApi/transaction';
 
 // app color
 const Color appColor = Colors.black;

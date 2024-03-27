@@ -1,7 +1,9 @@
-import 'package:employee/blocs/transaction_bloc.dart';
-import 'package:employee/repository/transaction_repository.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../blocs.transactions/transaction_bloc.dart';
+import '../../../repository/transaction_repository.dart';
 
 class ShowTransactionDetails extends StatelessWidget {
   final TransactionRepository transactionRepository;

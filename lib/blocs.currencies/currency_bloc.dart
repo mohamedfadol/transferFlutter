@@ -15,7 +15,7 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
   var logger = Logger();
   final CurrencyRepository currencyRepository;
   CurrencyBloc(this.currencyRepository) : super(CurrencyInitial()) {
-    on<CurrencyEvent>((event, emit) async{
+    on<CurrencyLoadEvent>((event, emit) async{
       emit(CurrencyLoadingState());
       try{
         final List<Currency> currencies = await currencyRepository.fetchCurrencies();
@@ -25,5 +25,17 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
         emit(CurrencyErrorState(message: e.toString()));
       }
     });
+
+    on<DropdownItemSelectedCurrencyEvent>((event, emit) {
+      // No need to fetch the user again if we already have the list and the selected user
+      // Directly emit UserLoadedState with updated selectedUser
+      if (state is CurrencyLoadedState) {
+        logger.d(event.selectedCurrency);
+        emit(CurrencyLoadedState(currencies: (state as CurrencyLoadedState).currencies, selectedCurrency: event.selectedCurrency));
+
+      }
+    });
+
+
   }
 }

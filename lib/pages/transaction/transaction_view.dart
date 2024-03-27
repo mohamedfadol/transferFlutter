@@ -8,7 +8,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../../utility/api_pdf.dart';
 import '../../../utility/invoice_pdf.dart';
-import '../../widgets/CustomImageWidget.dart';
+import '../widgets/CustomImageWidget.dart';
 class TransactionView extends StatefulWidget {
   final TransactionModel transactionModel ;
   const TransactionView({super.key, required this.transactionModel});

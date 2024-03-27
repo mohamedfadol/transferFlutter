@@ -26,6 +26,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserErrorState(message: e.toString()));
       }
     });
+
+    on<DropdownItemSelectedUserEvent>((event, emit) {
+      // No need to fetch the user again if we already have the list and the selected user
+      // Directly emit UserLoadedState with updated selectedUser
+      if (state is UserLoadedState) {
+        emit(UserLoadedState(users: (state as UserLoadedState).users, selectedUser: event.selectedUser));
+      }
+    });
+
+
+
+
   }
 
 

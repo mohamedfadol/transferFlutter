@@ -1,13 +1,13 @@
 import 'package:transfer_flutter/models/cart_model.dart';
 import 'package:transfer_flutter/models/transaction_model.dart';
-import 'package:transfer_flutter/pages/home/transaction/transaction_view.dart';
-import 'package:transfer_flutter/pages/home/transaction/transfer_transaction.dart';
+import 'package:transfer_flutter/pages/transaction/transaction_view.dart';
+import 'package:transfer_flutter/pages/transaction/transfer_transaction.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/constant.dart';
 import '../../../helpers/nav_transition.dart';
-import '../../widgets/custom_list_tile.dart';
-import '../../widgets/custom_text.dart';
+import '../widgets/custom_list_tile.dart';
+import '../widgets/custom_text.dart';
 class TransactionDetails extends StatelessWidget {
     final CartModel cartModel ;
    const TransactionDetails({super.key, required this.cartModel});

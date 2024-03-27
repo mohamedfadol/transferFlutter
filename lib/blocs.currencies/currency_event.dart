@@ -16,3 +16,12 @@ class CurrencyLoadedEvent extends CurrencyEvent {
   @override
   List<Object> get props => [currencies];
 }
+
+
+class DropdownItemSelectedCurrencyEvent extends CurrencyEvent {
+  final Currency selectedCurrency;
+  const DropdownItemSelectedCurrencyEvent({required this.selectedCurrency});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [selectedCurrency];
+}

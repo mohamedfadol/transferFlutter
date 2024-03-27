@@ -1,4 +1,4 @@
-import 'package:transfer_flutter/blocs/auth_bloc.dart';
+import 'package:transfer_flutter/blocs/authentication/auth_bloc.dart';
 import 'package:transfer_flutter/pages/auth/otp_screen.dart';
 import 'package:transfer_flutter/pages/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +15,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin{
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController email = TextEditingController(text: 'test@test.com');
+  TextEditingController password = TextEditingController(text: 'test@test.com');
   AuthBloc? authBloc;
 
   late AnimationController _controller;
